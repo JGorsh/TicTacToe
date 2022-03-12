@@ -1,9 +1,13 @@
 package com.alex.model;
 
 import com.alex.controller.Controller;
+import com.alex.repository.SaveParseXML;
+import com.alex.view.GameBoard;
 import com.alex.view.View;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Model {
 
@@ -11,6 +15,11 @@ public class Model {
     public static char symbol;   // символ Х или 0
     public static String firstPlayer; //имя первого игрока
     public static String secondPlayer; //имя второго игрока
+    public static Player onePlay; // объявляем первого игрока
+    public static Player twoPlay; // объявляем второго игрока
+    public static Step playerStep; // объявляем переменную позиции игрока
+    public static String winner; // победитель
+    public static List<Step> stepList = new ArrayList<>(); // список шагов
     public static int countFirst;  //количество побед первого игрока
     public static int countSecond;  //количество побед второго игрока
     public static boolean isNext = true; // флаг результата
@@ -18,11 +27,11 @@ public class Model {
     public static ArrayList<Integer> moveList = new ArrayList<>(); // для записи позиций и счета количества ходов
     public static Integer[] variantPosition = {1, 2, 3, 4, 5, 6, 7, 8, 9}; // для обработки исключений
     public static char[][] boardView = {
-            {'|', '-', '|', '-', '|', '-', '|'},
+            {'|', '1', '|', '2', '|', '3', '|'},
             {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-            {'|', '-', '|', '-', '|', '-', '|'},
+            {'|', '4', '|', '5', '|', '6', '|'},
             {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-            {'|', '-', '|', '-', '|', '-', '|'}
+            {'|', '7', '|', '8', '|', '9', '|'}
     }; // форма поля
 
     //метод проверки массива на соответствие выиграшных вариантов
@@ -46,12 +55,14 @@ public class Model {
     public static void request() throws IOException {
         answer = Controller.reader.readLine();
         if (answer.equals("y")) {
+            SaveParseXML.saveXML();// сохранение в XML
             initBoard();
             Controller.writer.write("\n" + "--------------------------------" + "\n");
             Controller.startGame();
         } else {
             System.out.println("Конец игры!");
             Controller.writer.write("\n" + "Результат:" + "\n" + firstPlayer + " " + countFirst + "\n" + secondPlayer + " " + countSecond + "\n");
+            SaveParseXML.saveXML();// сохранение в XML
             isNext = false;
         }
     }
@@ -61,7 +72,8 @@ public class Model {
 
         if (checkProgress('X')) {
             countFirst++;
-            View.printBoard(boardView);
+            GameBoard.printBoard(boardView);
+            winner = firstPlayer;
             View.printWinMessage(firstPlayer);
             request();
             return isNext;
@@ -69,14 +81,16 @@ public class Model {
 
         if (checkProgress('0')) {
             countSecond++;
-            View.printBoard(boardView);
+            GameBoard.printBoard(boardView);
+            winner = secondPlayer;
             View.printWinMessage(secondPlayer);
             request();
             return isNext;
         }
 
         if (moveList.size() == 9) {
-            View.printBoard(boardView);
+            GameBoard.printBoard(boardView);
+            winner = "Ничья!";
             View.printDrawMessage();
             request();
             return isNext;
@@ -128,14 +142,15 @@ public class Model {
     //сброс переменных при выборе: продолжить игру
     public static void initBoard() {
         char[][] boardViewClean = {
-                {'|', '-', '|', '-', '|', '-', '|'},
+                {'|', '1', '|', '2', '|', '3', '|'},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {'|', '-', '|', '-', '|', '-', '|'},
+                {'|', '4', '|', '5', '|', '6', '|'},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {'|', '-', '|', '-', '|', '-', '|'}
+                {'|', '7', '|', '8', '|', '9', '|'}
         };
         boardView = boardViewClean;
         moveList = new ArrayList<>();
+        Model.stepList = new ArrayList<>();
     }
 
     //проверка на робота

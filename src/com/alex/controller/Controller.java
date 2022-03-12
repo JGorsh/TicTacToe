@@ -1,6 +1,10 @@
 package com.alex.controller;
 
 import com.alex.model.Model;
+import com.alex.model.Player;
+import com.alex.model.Step;
+import com.alex.repository.SaveParseXML;
+import com.alex.view.GameBoard;
 import com.alex.view.View;
 
 import java.io.*;
@@ -75,25 +79,29 @@ public class Controller {
      // Обработчик первого игрока
     public static void firstPlayerHandler() throws IOException {
         View.printStartFirstPlayer(); //сообщение о ходе первого игрока
-        View.printBoard(Model.boardView); //отображения поля
+        GameBoard.printBoard(Model.boardView); //отображения поля
         readSymbol(); //считывание введенной позиции символа первого игрока
         writer.write(Model.firstPlayer + " сделал ход на " + Model.position + " позицию" + "\n"); //запись хода первого игрока
         Model.choicePosition(Model.boardView, Model.position, Model.firstPlayer); //изменение поля в результате выбора позиции первого игрока
+        Model.playerStep = new Step(Model.onePlay, Model.position); // создаем экземпляр класса Step (добавляем текущего игрока и позицию)
+        Model.stepList.add(Model.playerStep); // добавляем Step в список
     }
 
     // Обработчик второго игрока
     public static void secondPlayerHandler() throws IOException {
         View.printStartSecondPlayer(); //сообщение о ходе второго игрока
-        View.printBoard(Model.boardView);//отображения поля
+        GameBoard.printBoard(Model.boardView);//отображения поля
         readSymbol(); //считывание введенной позиции символа второго игрока
         writer.write(Model.secondPlayer + " сделал ход на " + Model.position + " позицию" + "\n"); //запись хода второго игрока
         Model.choicePosition(Model.boardView, Model.position, Model.secondPlayer); //изменение поля в результате выбора позиции второго игрока
+        Model.playerStep = new Step(Model.twoPlay, Model.position); // создаем экземпляр класса Step (добавляем текущего игрока и позицию)
+        Model.stepList.add(Model.playerStep); // добавляем Step в список
     }
 
     // Обработчик робота
     public static void robotHandler() throws IOException {
         View.printStartRobot(); //сообщение о ходе  игрока
-        View.printBoard(Model.boardView);//отображения поля
+        GameBoard.printBoard(Model.boardView);//отображения поля
 
         Random random = new Random();
         while(true){  // проверка робота на повторное число
@@ -110,6 +118,16 @@ public class Controller {
         }
         writer.write(Model.secondPlayer + " сделал ход на " + Model.position + " позицию" + "\n"); //запись хода  игрока
         Model.choicePosition(Model.boardView, Model.position, "robot"); //изменение поля в результате выбора позиции  игрока
+
+        //
+        if(Model.isRobot(Model.firstPlayer)){
+            Model.playerStep = new Step(Model.onePlay, Model.position); // создаем экземпляр класса Step (добавляем текущего игрока и позицию)
+            Model.stepList.add(Model.playerStep); // добавляем Step в список
+        }
+        else {
+            Model.playerStep = new Step(Model.twoPlay, Model.position); // создаем экземпляр класса Step (добавляем текущего игрока и позицию)
+            Model.stepList.add(Model.playerStep); // добавляем Step в список
+        }
     }
 
     // считывание и обработка повторного имени
@@ -117,6 +135,7 @@ public class Controller {
         View.printMessageFirst(); //запрос имени первого игрока
         try {
             Model.firstPlayer = reader.readLine(); //запись в переменную имени первого игрока
+            Model.onePlay =  new Player(1, Model.firstPlayer, 'X'); // создаем экземпляр первого игрока
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -125,6 +144,7 @@ public class Controller {
             try {
                 View.printMessageSecond();  //запрос имени второго игрока
                 Model.secondPlayer = reader.readLine();  //запись в переменную имени второго игрока
+                Model.twoPlay =  new Player(2, Model.secondPlayer, '0'); // создаем экземпляр второго игрока
                 if (Model.firstPlayer.equals( Model.secondPlayer)) {  // проверка одинакового имени
                     throw new Exception();
                 }

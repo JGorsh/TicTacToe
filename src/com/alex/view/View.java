@@ -2,21 +2,9 @@ package com.alex.view;
 
 
 import com.alex.model.Model;
+import com.alex.repository.SaveParseXML;
 
 public class View {
-
-    //отображение игрового поля
-    public static void printBoard(char[][] boardView){
-
-        System.out.println("--------------------------------");
-
-        for(char [] row : boardView){
-            for(char c : row){
-                System.out.print(c);
-            }
-            System.out.println();
-        }
-    }
 
     public static void printMessageFirst(){
 
