@@ -5,7 +5,6 @@ import com.alex.model.Player;
 import com.alex.model.Step;
 import com.alex.view.GameBoard;
 import com.alex.view.View;
-
 import java.io.*;
 import java.util.Arrays;
 import java.util.Random;

@@ -10,6 +10,9 @@ import java.io.File;
 
 public class ParseXML {
 
+    public static String url = "C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\alexey и robot 2022_03_12  18_47_26.xml";
+
+    // основной метод парсинга Xml файла
     public static void parseXML()  {
         String nameParse;
         int idParse;
@@ -18,7 +21,7 @@ public class ParseXML {
         Step parseStep;
 
         //открываем файл для парсинга
-        File file = new File("C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\alexey и robot 2022_03_12  18_47_26.xml");
+        File file = new File(url);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document document;
         try {
@@ -28,11 +31,14 @@ public class ParseXML {
             return;
         }
 
+
         Node rootNode = document.getFirstChild();
         NodeList nodeList = rootNode.getChildNodes();
 
+        //проходим по списку nodelist и выбираем и обрабатываем нужные нам элементы
         for (int i = 0; i < nodeList.getLength(); i++){
 
+            //обработка элемента Player
             if (nodeList.item(i).getNodeName().equals("Player")) {
                 nameParse = ((Element) nodeList.item(i)).getAttribute("name");
                 idParse =Integer.valueOf(((Element) nodeList.item(i)).getAttribute("id"));
@@ -51,6 +57,7 @@ public class ParseXML {
                 continue;
             }
 
+            //обработка элемента Game
             if (nodeList.item(i).getNodeName().equals("Game")){
                 NodeList gameList = nodeList.item(i).getChildNodes();
                 for (int j = 0; j < gameList.getLength(); j++){
@@ -60,7 +67,8 @@ public class ParseXML {
                     }
                     if (gameList.item(j).getNodeName().equals("Step")){
 
-                        positionParse =Integer.valueOf(gameList.item(j).getTextContent());
+                        // убрал пробелы в id если они присутствуют, подготовил для адаптера
+                        positionParse =Integer.valueOf(gameList.item(j).getTextContent().replaceAll(" ",""));
                         if(((Element) gameList.item(j)).getAttribute("playerId").equals("1")){
                             parseStep = new Step(Model.onePlay, positionParse);
                         }
@@ -72,6 +80,7 @@ public class ParseXML {
                 }
             }
 
+            //обработка элемента Player в GameResult
             NodeList resultNode = document.getElementsByTagName("Player");
             if(resultNode.getLength()>2){
                 Node winnerNode = resultNode.item(resultNode.getLength()-1);

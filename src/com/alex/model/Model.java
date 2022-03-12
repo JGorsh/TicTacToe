@@ -161,6 +161,7 @@ public class Model {
         } else return false;
     }
 
+    //обработка списка Step и вывод полученного результата
     public static void listHandler(List<Step> stepList){
         for(Step step : stepList){
             choicePosition(boardView, step.getPlayerPosition(), step.getPlayer().getName());
