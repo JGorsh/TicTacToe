@@ -25,4 +25,12 @@ public class Step {
     public void setPlayerPosition(Integer playerPosition) {
         this.playerPosition = playerPosition;
     }
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "player=" + player +
+                ", playerPosition=" + playerPosition +
+                '}';
+    }
 }

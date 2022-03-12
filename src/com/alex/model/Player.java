@@ -4,9 +4,9 @@ package com.alex.model;
 public class Player {
     int id;
     String name;
-    char mark;
+    String mark;
 
-    public Player(int id, String name, char mark) {
+    public Player(int id, String name, String mark) {
         this.id = id;
         this.name = name;
         this.mark = mark;
@@ -28,11 +28,20 @@ public class Player {
         this.name = name;
     }
 
-    public char getMark() {
+    public String getMark() {
         return mark;
     }
 
-    public void setMark(char mark) {
+    public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", mark='" + mark + '\'' +
+                '}';
     }
 }

@@ -2,7 +2,6 @@ package com.alex.view;
 
 
 import com.alex.model.Model;
-import com.alex.repository.SaveParseXML;
 
 public class View {
 

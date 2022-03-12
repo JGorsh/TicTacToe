@@ -2,8 +2,9 @@ package com.alex.repository;
 
 import com.alex.model.Model;
 import com.alex.model.Step;
-import org.w3c.dom.*;
-
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -15,8 +16,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
-public class SaveParseXML {
+public class SaveXML {
 
     public static String address = "C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\"; //адрес папки для сохранения результата
 
@@ -49,7 +49,7 @@ public class SaveParseXML {
         Attr attrName = document.createAttribute("name");
         attrName.setValue(String.valueOf(Model.onePlay.getName()));
         playerOne.setAttributeNode(attrName);
-        Attr attrMark = document.createAttribute("mark");
+        Attr attrMark = document.createAttribute("symbol");
         attrMark.setValue(String.valueOf(Model.onePlay.getMark()));
         playerOne.setAttributeNode(attrMark);
         gameReport.appendChild(playerOne);
@@ -62,7 +62,7 @@ public class SaveParseXML {
         Attr attrNameTwo = document.createAttribute("name");
         attrNameTwo.setValue(String.valueOf(Model.twoPlay.getName()));
         playerTwo.setAttributeNode(attrNameTwo);
-        Attr attrMarkTwo = document.createAttribute("mark");
+        Attr attrMarkTwo = document.createAttribute("symbol");
         attrMarkTwo.setValue(String.valueOf(Model.twoPlay.getMark()));
         playerTwo.setAttributeNode(attrMarkTwo);
         gameReport.appendChild(playerTwo);
@@ -95,7 +95,7 @@ public class SaveParseXML {
             Attr attrNameWin = document.createAttribute("name");
             attrNameWin.setValue(String.valueOf(Model.onePlay.getName()));
             playerOneWin.setAttributeNode(attrNameWin);
-            Attr attrMarkWin = document.createAttribute("mark");
+            Attr attrMarkWin = document.createAttribute("symbol");
             attrMarkWin.setValue(String.valueOf(Model.onePlay.getMark()));
             playerOneWin.setAttributeNode(attrMarkWin);
             gameResult.appendChild(playerOneWin);
@@ -108,7 +108,7 @@ public class SaveParseXML {
             Attr attrNameTwoWin = document.createAttribute("name");
             attrNameTwoWin.setValue(String.valueOf(Model.twoPlay.getName()));
             playerTwoWin.setAttributeNode(attrNameTwoWin);
-            Attr attrMarkTwoWin = document.createAttribute("mark");
+            Attr attrMarkTwoWin = document.createAttribute("symbol");
             attrMarkTwoWin.setValue(String.valueOf(Model.twoPlay.getMark()));
             playerTwoWin.setAttributeNode(attrMarkTwoWin);
             gameResult.appendChild(playerTwoWin);
@@ -140,38 +140,4 @@ public class SaveParseXML {
         }
     }
 
-    public static void parseXML()  {
-
-        //открываем файл для парсинга
-        File file = new File("C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\alexey и robot 2022_03_12  13_03_14.xml");
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        Document document;
-        try {
-            document = factory.newDocumentBuilder().parse(file);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
-
-        Node rootNode = document.getFirstChild();
-        NodeList nodeList = rootNode.getChildNodes();
-
-        for (int i = 0; i < nodeList.getLength(); i++){
-
-            if (nodeList.item(i).getNodeType() != Node.ELEMENT_NODE){
-                continue;
-            }
-            if (!nodeList.item(i).getNodeName().equals("Game")){
-                continue;
-            }
-
-            NodeList gameList = nodeList.item(i).getChildNodes();
-            for (int j = 0; j < gameList.getLength(); j++){
-
-                if (gameList.item(i).getNodeType() != Node.ELEMENT_NODE){
-                    continue;
-                }
-            }
-        }
-    }
 }

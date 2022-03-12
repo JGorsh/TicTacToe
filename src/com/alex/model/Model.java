@@ -1,7 +1,7 @@
 package com.alex.model;
 
 import com.alex.controller.Controller;
-import com.alex.repository.SaveParseXML;
+import com.alex.repository.SaveXML;
 import com.alex.view.GameBoard;
 import com.alex.view.View;
 
@@ -17,6 +17,7 @@ public class Model {
     public static String secondPlayer; //имя второго игрока
     public static Player onePlay; // объявляем первого игрока
     public static Player twoPlay; // объявляем второго игрока
+    public static Player winnerPlay; // победитель
     public static Step playerStep; // объявляем переменную позиции игрока
     public static String winner; // победитель
     public static List<Step> stepList = new ArrayList<>(); // список шагов
@@ -55,14 +56,14 @@ public class Model {
     public static void request() throws IOException {
         answer = Controller.reader.readLine();
         if (answer.equals("y")) {
-            SaveParseXML.saveXML();// сохранение в XML
+            SaveXML.saveXML();// сохранение в XML
             initBoard();
             Controller.writer.write("\n" + "--------------------------------" + "\n");
             Controller.startGame();
         } else {
             System.out.println("Конец игры!");
             Controller.writer.write("\n" + "Результат:" + "\n" + firstPlayer + " " + countFirst + "\n" + secondPlayer + " " + countSecond + "\n");
-            SaveParseXML.saveXML();// сохранение в XML
+            SaveXML.saveXML();// сохранение в XML
             isNext = false;
         }
     }
@@ -158,5 +159,20 @@ public class Model {
         if (player.equals("robot")) {
             return true;
         } else return false;
+    }
+
+    public static void listHandler(List<Step> stepList){
+        for(Step step : stepList){
+            choicePosition(boardView, step.getPlayerPosition(), step.getPlayer().getName());
+            GameBoard.printBoard(boardView);
+        }
+        System.out.println();
+        if (winnerPlay==null){
+            System.out.println("Ничья!!!");
+        }
+        else{
+            System.out.println("Player " + winnerPlay.getId() + " -> " + winnerPlay.getName() + " is winner as " + winnerPlay.getMark()+ "!");
+        }
+
     }
 }
