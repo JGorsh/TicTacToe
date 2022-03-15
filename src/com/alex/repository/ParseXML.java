@@ -10,7 +10,7 @@ import java.io.File;
 
 public class ParseXML {
 
-    public static String url = "C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\alexey и robot 2022_03_12  18_47_26.xml";
+    public static String url = "alex и timur 2022_03_15  17_32_58.xml";
 
     // основной метод парсинга Xml файла
     public static void parseXML()  {

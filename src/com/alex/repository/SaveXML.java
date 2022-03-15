@@ -18,7 +18,7 @@ import java.util.Date;
 
 public class SaveXML {
 
-    public static String address = "C:\\java project\\Ylablearn\\TicTacToe\\src\\save\\"; //адрес папки для сохранения результата
+    //public static String address = ""; //адрес папки для сохранения результата
 
     public static void saveXML() {
         // дата игры для уникальности имени файла
@@ -129,7 +129,7 @@ public class SaveXML {
             e.printStackTrace();
         }
         DOMSource domSource = new DOMSource(document);
-        StreamResult streamFile = new StreamResult(new File(address +
+        StreamResult streamFile = new StreamResult(new File(
                 Model.firstPlayer + " и " + Model.secondPlayer + " " + dateFile + ".xml"));
         try {
             transformer.transform(domSource,streamFile);
