@@ -1,10 +1,16 @@
 package com.alex.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Player {
+
     int id;
     String name;
     String mark;
+
+    public Player() {
+    }
 
     public Player(int id, String name, String mark) {
         this.id = id;
@@ -12,6 +18,7 @@ public class Player {
         this.mark = mark;
     }
 
+    @JsonProperty("id")
     public int getId() {
         return id;
     }
@@ -20,6 +27,7 @@ public class Player {
         this.id = id;
     }
 
+    @JsonProperty("name")
     public String getName() {
         return name;
     }
@@ -28,6 +36,7 @@ public class Player {
         this.name = name;
     }
 
+    @JsonProperty("symbol")
     public String getMark() {
         return mark;
     }

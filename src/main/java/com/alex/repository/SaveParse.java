@@ -1,11 +1,10 @@
 package com.alex.repository;
 
-import com.alex.model.Model;
-import com.alex.model.Step;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import com.alex.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
+import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -13,18 +12,22 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SaveXML {
 
-    //public static String address = ""; //адрес папки для сохранения результата
+public class SaveParse implements SaveParseInterface{
 
-    public static void saveXML() {
-        // дата игры для уникальности имени файла
-        SimpleDateFormat formater = new SimpleDateFormat("yyyy_MM_dd  HH_mm_ss");
-        Date date = new Date();
-        String dateFile = formater.format(date);
+    // дата игры для уникальности имени файла
+    public static SimpleDateFormat formater = new SimpleDateFormat("yyyy_MM_dd  HH_mm_ss");
+    public static Date date = new Date();
+    public static String dateFile = formater.format(date);
+
+
+    @Override
+    public void saveXML() {
+
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = null;
@@ -140,4 +143,122 @@ public class SaveXML {
         }
     }
 
+    // основной метод парсинга Xml файла
+    @Override
+    public void parseXML(String url) {
+
+        String nameParse;
+        int idParse;
+        String symbolParse;
+        int positionParse;
+        Step parseStep;
+
+        //открываем файл для парсинга
+        File file = new File(url);
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        Document document;
+        try {
+            document = factory.newDocumentBuilder().parse(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+
+
+        Node rootNode = document.getFirstChild();
+        NodeList nodeList = rootNode.getChildNodes();
+
+        //проходим по списку nodelist и выбираем и обрабатываем нужные нам элементы
+        for (int i = 0; i < nodeList.getLength(); i++){
+
+            //обработка элемента Player
+            if (nodeList.item(i).getNodeName().equals("Player")) {
+                nameParse = ((Element) nodeList.item(i)).getAttribute("name");
+                idParse =Integer.valueOf(((Element) nodeList.item(i)).getAttribute("id"));
+                symbolParse =((Element) nodeList.item(i)).getAttribute("symbol");
+                if(idParse==1){
+                    Model.onePlay = new Player(idParse, nameParse,symbolParse);
+                    Model.firstPlayer = Model.onePlay.getName();
+                }
+                else {
+                    Model.twoPlay = new Player(idParse, nameParse,symbolParse);
+                    Model.secondPlayer = Model.twoPlay.getName();
+                }
+            }
+
+            if (nodeList.item(i).getNodeType() != Node.ELEMENT_NODE){
+                continue;
+            }
+
+            //обработка элемента Game
+            if (nodeList.item(i).getNodeName().equals("Game")){
+                NodeList gameList = nodeList.item(i).getChildNodes();
+                for (int j = 0; j < gameList.getLength(); j++){
+
+                    if (gameList.item(j).getNodeType() != Node.ELEMENT_NODE){
+                        continue;
+                    }
+                    if (gameList.item(j).getNodeName().equals("Step")){
+
+                        // убрал пробелы в id если они присутствуют, подготовил для адаптера
+                        positionParse =Integer.valueOf(gameList.item(j).getTextContent().replaceAll(" ",""));
+                        if(((Element) gameList.item(j)).getAttribute("playerId").equals("1")){
+                            parseStep = new Step(Model.onePlay, positionParse);
+                        }
+                        else{
+                            parseStep = new Step(Model.twoPlay, positionParse);
+                        }
+                        Model.stepList.add(parseStep);
+                    }
+                }
+            }
+
+            //обработка элемента Player в GameResult
+            NodeList resultNode = document.getElementsByTagName("Player");
+            if(resultNode.getLength()>2){
+                Node winnerNode = resultNode.item(resultNode.getLength()-1);
+                nameParse = ((Element)winnerNode).getAttribute("name");
+                idParse =Integer.valueOf(((Element)winnerNode).getAttribute("id"));
+                symbolParse =((Element) winnerNode).getAttribute("symbol");
+                Model.winnerPlay = new Player(idParse, nameParse, symbolParse);
+            }
+        }
+    }
+
+    @Override
+    public void saveJSON() throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        Root root = new Root();
+
+        GamePlay gamePlay = new GamePlay();
+        gamePlay.players.add(Model.onePlay);
+        gamePlay.players.add(Model.twoPlay);
+        root.setGamePlay(gamePlay);
+
+        Game game = new Game();
+        game.setStepList(Model.stepList);
+        gamePlay.setGame(game);
+
+        GameResult gameResult = new GameResult();
+        if(Model.winner.equals(Model.firstPlayer)){
+            gameResult.setWinner(Model.onePlay);
+        }
+        else if (Model.winner.equals(Model.secondPlayer)){
+            gameResult.setWinner(Model.twoPlay);
+        }
+        else gameResult.setWinner(Model.winnerPlay);;
+
+        gamePlay.setGameResult(gameResult);
+
+        //String json = objectMapper.writeValueAsString(root);
+
+        objectMapper.writeValue(new File(Model.firstPlayer + " и " + Model.secondPlayer + " " + dateFile + ".json"), root);
+    }
+
+    @Override
+    public void parseJSON(String url) {
+
+    }
 }

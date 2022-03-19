@@ -16,4 +16,4 @@
 com.alex.repository.SaveXML поле address), 
 для запуска парсера и воспроизведения игр запускаем ArchiveGame (для проверки 
 нужно указать полный адрес откуда парсить игру
-com.alex.repository.ParseXML поле url))
+com.alex.repository.SaveParse поле url))

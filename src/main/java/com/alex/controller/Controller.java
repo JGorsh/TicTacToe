@@ -1,8 +1,6 @@
 package com.alex.controller;
 
-import com.alex.model.Model;
-import com.alex.model.Player;
-import com.alex.model.Step;
+import com.alex.model.*;
 import com.alex.view.GameBoard;
 import com.alex.view.View;
 import java.io.*;
@@ -32,6 +30,7 @@ public class Controller {
         startGame(); //запуск игры
         reader.close(); //закрытие потока BufferedReader
         writer.close(); //закрытие потока BufferedWriter
+
     }
 
     public static void startGame() throws IOException {
@@ -133,7 +132,7 @@ public class Controller {
         View.printMessageFirst(); //запрос имени первого игрока
         try {
             Model.firstPlayer = reader.readLine(); //запись в переменную имени первого игрока
-            Model.onePlay =  new Player(1, Model.firstPlayer, "X"); // создаем экземпляр первого игрока
+            Model.onePlay = new Player(1, Model.firstPlayer, "X"); // создаем экземпляр первого игрока
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,7 +141,7 @@ public class Controller {
             try {
                 View.printMessageSecond();  //запрос имени второго игрока
                 Model.secondPlayer = reader.readLine();  //запись в переменную имени второго игрока
-                Model.twoPlay =  new Player(2, Model.secondPlayer, "0"); // создаем экземпляр второго игрока
+                Model.twoPlay = new Player(2, Model.secondPlayer, "0"); // создаем экземпляр второго игрока
                 if (Model.firstPlayer.equals( Model.secondPlayer)) {  // проверка одинакового имени
                     throw new Exception();
                 }

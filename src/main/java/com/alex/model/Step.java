@@ -1,9 +1,12 @@
 package com.alex.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Step {
-   private Player player;
-   private int playerPosition;
+
+    private Player player;
+    private int playerPosition;
 
     public Step(Player player, int playerPosition) {
         this.player = player;
@@ -26,11 +29,4 @@ public class Step {
         this.playerPosition = playerPosition;
     }
 
-    @Override
-    public String toString() {
-        return "Step{" +
-                "player=" + player +
-                ", playerPosition=" + playerPosition +
-                '}';
-    }
 }

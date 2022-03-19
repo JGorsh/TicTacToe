@@ -1,15 +1,15 @@
 package com.alex.model;
 
 import com.alex.controller.Controller;
-import com.alex.repository.SaveXML;
+import com.alex.repository.SaveParse;
 import com.alex.view.GameBoard;
 import com.alex.view.View;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
+
 
     public static int position;  // позиция которую вводит текущий игрок
     public static char symbol;   // символ Х или 0
@@ -20,13 +20,15 @@ public class Model {
     public static Player winnerPlay; // победитель
     public static Step playerStep; // объявляем переменную позиции игрока
     public static String winner; // победитель
-    public static List<Step> stepList = new ArrayList<>(); // список шагов
+    public static GameResult gameResult = new GameResult();
     public static int countFirst;  //количество побед первого игрока
     public static int countSecond;  //количество побед второго игрока
     public static boolean isNext = true; // флаг результата
     public static String answer;  // ответ запроса о продолжении игры
+    public static List<Step> stepList = new ArrayList<>(); // список шагов
     public static ArrayList<Integer> moveList = new ArrayList<>(); // для записи позиций и счета количества ходов
     public static Integer[] variantPosition = {1, 2, 3, 4, 5, 6, 7, 8, 9}; // для обработки исключений
+    public static String url = "alex и timur 2022_03_15  17_32_58.xml"; //url парсинга
     public static char[][] boardView = {
             {'|', '1', '|', '2', '|', '3', '|'},
             {' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -54,16 +56,19 @@ public class Model {
 
     // метод обработки запроса на повторную игру
     public static void request() throws IOException {
+        SaveParse saveParse = new SaveParse();
         answer = Controller.reader.readLine();
         if (answer.equals("y")) {
-            SaveXML.saveXML();// сохранение в XML
+            saveParse.saveXML();// сохранение в XML
+            saveParse.saveJSON();
             initBoard();
             Controller.writer.write("\n" + "--------------------------------" + "\n");
             Controller.startGame();
         } else {
             System.out.println("Конец игры!");
             Controller.writer.write("\n" + "Результат:" + "\n" + firstPlayer + " " + countFirst + "\n" + secondPlayer + " " + countSecond + "\n");
-            SaveXML.saveXML();// сохранение в XML
+            saveParse.saveXML();// сохранение в XML
+            saveParse.saveJSON();
             isNext = false;
         }
     }
@@ -168,11 +173,11 @@ public class Model {
             GameBoard.printBoard(boardView);
         }
         System.out.println();
-        if (winnerPlay==null){
+        if (Model.winnerPlay==null){
             System.out.println("Ничья!!!");
         }
         else{
-            System.out.println("Player " + winnerPlay.getId() + " -> " + winnerPlay.getName() + " is winner as " + winnerPlay.getMark()+ "!");
+            System.out.println("Player " + Model.winnerPlay.getId() + " -> " + Model.winnerPlay.getName() + " is winner as " + Model.winnerPlay.getMark()+ "!");
         }
 
     }

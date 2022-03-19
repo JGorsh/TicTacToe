@@ -1,6 +1,8 @@
 package com.alex.view;
 
 
+import com.alex.model.Game;
+import com.alex.model.GamePlay;
 import com.alex.model.Model;
 
 public class View {
@@ -29,6 +31,9 @@ public class View {
         System.out.println("--------------------------------");
         System.out.println(Model.firstPlayer + " Твой ход!");
         System.out.println("Введите номер позиции [1-9]");
+       //System.out.println(GamePlay.onePlay);
+       //System.out.println(GamePlay.twoPlay);
+       //System.out.println(Game.stepList);
     }
     public static void printStartRobot(){
         System.out.println("--------------------------------");

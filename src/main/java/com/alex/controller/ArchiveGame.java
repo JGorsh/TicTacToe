@@ -2,12 +2,13 @@ package com.alex.controller;
 
 import com.alex.model.Adapter;
 import com.alex.model.Model;
-import com.alex.repository.ParseXML;
+import com.alex.repository.SaveParse;
 
 public class ArchiveGame {
     public static void main(String[] args)  {
 
-        ParseXML.parseXML();
+        SaveParse saveParse = new SaveParse();
+        saveParse.parseXML(Model.url);
         Model.listHandler(Adapter.listHandlerAdapter(Model.stepList));
     }
 
