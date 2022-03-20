@@ -1,0 +1,82 @@
+{
+  "GamePlay" : {
+    "Player" : [ {
+      "id" : 1,
+      "name" : "1",
+      "symbol" : "X"
+    }, {
+      "id" : 2,
+      "name" : "2",
+      "symbol" : "0"
+    } ],
+    "Game" : {
+      "Step" : [ {
+        "player" : {
+          "id" : 1,
+          "name" : "1",
+          "symbol" : "X"
+        },
+        "playerPosition" : 6
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "2",
+          "symbol" : "0"
+        },
+        "playerPosition" : 5
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "1",
+          "symbol" : "X"
+        },
+        "playerPosition" : 4
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "2",
+          "symbol" : "0"
+        },
+        "playerPosition" : 3
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "1",
+          "symbol" : "X"
+        },
+        "playerPosition" : 2
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "2",
+          "symbol" : "0"
+        },
+        "playerPosition" : 1
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "1",
+          "symbol" : "X"
+        },
+        "playerPosition" : 7
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "2",
+          "symbol" : "0"
+        },
+        "playerPosition" : 8
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "1",
+          "symbol" : "X"
+        },
+        "playerPosition" : 9
+      } ]
+    },
+    "GameResult" : {
+      "Player" : null
+    }
+  }
+}

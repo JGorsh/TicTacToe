@@ -1,0 +1,72 @@
+{
+  "GamePlay" : {
+    "Player" : [ {
+      "id" : 1,
+      "name" : "robot",
+      "symbol" : "X"
+    }, {
+      "id" : 2,
+      "name" : "alexey",
+      "symbol" : "0"
+    } ],
+    "Game" : {
+      "Step" : [ {
+        "player" : {
+          "id" : 1,
+          "name" : "robot",
+          "symbol" : "X"
+        },
+        "playerPosition" : 8
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "alexey",
+          "symbol" : "0"
+        },
+        "playerPosition" : 1
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "robot",
+          "symbol" : "X"
+        },
+        "playerPosition" : 2
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "alexey",
+          "symbol" : "0"
+        },
+        "playerPosition" : 3
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "robot",
+          "symbol" : "X"
+        },
+        "playerPosition" : 7
+      }, {
+        "player" : {
+          "id" : 2,
+          "name" : "alexey",
+          "symbol" : "0"
+        },
+        "playerPosition" : 4
+      }, {
+        "player" : {
+          "id" : 1,
+          "name" : "robot",
+          "symbol" : "X"
+        },
+        "playerPosition" : 5
+      } ]
+    },
+    "GameResult" : {
+      "Player" : {
+        "id" : 1,
+        "name" : "robot",
+        "symbol" : "X"
+      }
+    }
+  }
+}
