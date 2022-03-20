@@ -277,8 +277,6 @@ public class SaveParse implements SaveParseInterface{
 
         JsonNode nodeGameResult = objectMapper.readTree(new File(url)).get("GamePlay").get("GameResult").get("Player");
         Model.winnerPlay = objectMapper.readValue(nodeGameResult.toString(),Player.class);
-//        System.out.println(nodeStep);
-//        System.out.println(gamePlay);
-//        System.out.println(nodeGameResult);
+
     }
 }
