@@ -14,13 +14,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 
 public class SaveParse implements SaveParseInterface{
@@ -232,7 +234,7 @@ public class SaveParse implements SaveParseInterface{
     }
 
     @Override
-    public void saveJSON() throws IOException {
+    public void saveJSON(){
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -257,26 +259,99 @@ public class SaveParse implements SaveParseInterface{
 
         gamePlay.setGameResult(gameResult);
 
-        objectMapper.writeValue(new File(Model.firstPlayer + " и " + Model.secondPlayer + " " + dateFile + ".json"), root);
+        try {
+            objectMapper.writeValue(new File(Model.firstPlayer + " и " + Model.secondPlayer + " " + dateFile + ".json"), root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void parseJSON(String url) throws IOException {
+    public void parseJSON(String url){
         ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
 
-        JsonNode nodePlayers = objectMapper.readTree(new File(url)).get("GamePlay").get("Player");
+        JsonNode nodePlayers = null;
+        JsonNode nodeStep = null;
+        JsonNode nodeGameResult = null;
+        try {
+            nodePlayers = objectMapper.readTree(new File(url)).get("GamePlay").get("Player");
+            nodeStep = objectMapper.readTree(new File(url)).get("GamePlay").get("Game").get("Step");
+            nodeGameResult = objectMapper.readTree(new File(url)).get("GamePlay").get("GameResult").get("Player");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         GamePlay gamePlay = new GamePlay();
-        gamePlay.setPlayers(Arrays.asList(objectMapper.readValue(nodePlayers.toString(), Player[].class)));
+        try {
+            gamePlay.setPlayers(Arrays.asList(objectMapper.readValue(nodePlayers.toString(), Player[].class)));
+            Model.stepList = Arrays.asList(objectMapper.readValue(nodeStep.toString(), Step[].class));
+            Model.winnerPlay = objectMapper.readValue(nodeGameResult.toString(),Player.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         Model.onePlay = gamePlay.getPlayers().get(0);
         Model.firstPlayer = Model.onePlay.getName();
         Model.twoPlay = gamePlay.getPlayers().get(1);
         Model.secondPlayer = Model.twoPlay.getName();
+    }
 
-        JsonNode nodeStep = objectMapper.readTree(new File(url)).get("GamePlay").get("Game").get("Step");
-        Model.stepList = Arrays.asList(objectMapper.readValue(nodeStep.toString(), Step[].class));
+    @Override
+    public void parseHttpJSON(URL url) {
+        BufferedReader bufferedReader;
+        String line;
+        StringBuffer responseContent = new StringBuffer();
+        HttpURLConnection connection;
 
-        JsonNode nodeGameResult = objectMapper.readTree(new File(url)).get("GamePlay").get("GameResult").get("Player");
-        Model.winnerPlay = objectMapper.readValue(nodeGameResult.toString(),Player.class);
+        try {
+           connection = (HttpURLConnection)url.openConnection() ;
+
+            //request
+            connection.setRequestMethod("GET");
+            int status = connection.getResponseCode();
+
+            if(status>299){
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                while((line= bufferedReader.readLine()) !=null){
+                    responseContent.append(line);
+                }
+                bufferedReader.close();
+            } else {
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while((line= bufferedReader.readLine()) !=null){
+                    responseContent.append(line);
+                }
+                bufferedReader.close();
+            }
+            //System.out.println(responseContent);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // обработка Jackson полученный String Json из responseContent
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+
+        JsonNode nodePlayers = null;
+        JsonNode nodeStep = null;
+        JsonNode nodeGameResult = null;
+        try {
+            nodePlayers = objectMapper.readTree(responseContent.toString()).get("GamePlay").get("Player");
+            nodeStep = objectMapper.readTree(responseContent.toString()).get("GamePlay").get("Game").get("Step");
+            nodeGameResult = objectMapper.readTree(responseContent.toString()).get("GamePlay").get("GameResult").get("Player");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        GamePlay gamePlay = new GamePlay();
+        try {
+            gamePlay.setPlayers(Arrays.asList(objectMapper.readValue(nodePlayers.toString(), Player[].class)));
+            Model.stepList = Arrays.asList(objectMapper.readValue(nodeStep.toString(), Step[].class));
+            Model.winnerPlay = objectMapper.readValue(nodeGameResult.toString(),Player.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Model.onePlay = gamePlay.getPlayers().get(0);
+        Model.firstPlayer = Model.onePlay.getName();
+        Model.twoPlay = gamePlay.getPlayers().get(1);
+        Model.secondPlayer = Model.twoPlay.getName();
 
     }
 }
