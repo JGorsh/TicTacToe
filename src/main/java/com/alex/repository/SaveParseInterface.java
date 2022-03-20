@@ -5,6 +5,7 @@ import com.alex.model.GamePlay;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import java.io.IOException;
+import java.net.URL;
 
 public interface SaveParseInterface {
 
@@ -14,6 +15,6 @@ public interface SaveParseInterface {
 
     void saveJSON() throws IOException;
 
-    void parseJSON(String url);
+    void parseJSON(String url) throws IOException;
 
 }

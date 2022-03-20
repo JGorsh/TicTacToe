@@ -3,6 +3,7 @@ package com.alex.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public class Player {
 
     int id;

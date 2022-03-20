@@ -4,7 +4,8 @@ import com.alex.model.Adapter;
 import com.alex.model.Model;
 import com.alex.repository.SaveParse;
 
-public class ArchiveGame {
+
+public class XMLParser {
     public static void main(String[] args)  {
 
         SaveParse saveParse = new SaveParse();

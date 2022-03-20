@@ -1,12 +1,16 @@
 package com.alex.model;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
+@JsonAutoDetect
 public class Step {
 
     private Player player;
     private int playerPosition;
+
+    public Step() {
+    }
 
     public Step(Player player, int playerPosition) {
         this.player = player;

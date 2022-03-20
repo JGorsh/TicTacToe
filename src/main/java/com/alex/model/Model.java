@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model {
 
+public class Model {
 
     public static int position;  // позиция которую вводит текущий игрок
     public static char symbol;   // символ Х или 0

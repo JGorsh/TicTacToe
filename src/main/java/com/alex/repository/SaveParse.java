@@ -1,6 +1,9 @@
 package com.alex.repository;
 
 import com.alex.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -13,8 +16,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 
 public class SaveParse implements SaveParseInterface{
@@ -248,17 +254,31 @@ public class SaveParse implements SaveParseInterface{
         else if (Model.winner.equals(Model.secondPlayer)){
             gameResult.setWinner(Model.twoPlay);
         }
-        else gameResult.setWinner(Model.winnerPlay);;
 
         gamePlay.setGameResult(gameResult);
-
-        //String json = objectMapper.writeValueAsString(root);
 
         objectMapper.writeValue(new File(Model.firstPlayer + " и " + Model.secondPlayer + " " + dateFile + ".json"), root);
     }
 
     @Override
-    public void parseJSON(String url) {
+    public void parseJSON(String url) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
 
+        JsonNode nodePlayers = objectMapper.readTree(new File(url)).get("GamePlay").get("Player");
+        GamePlay gamePlay = new GamePlay();
+        gamePlay.setPlayers(Arrays.asList(objectMapper.readValue(nodePlayers.toString(), Player[].class)));
+        Model.onePlay = gamePlay.getPlayers().get(0);
+        Model.firstPlayer = Model.onePlay.getName();
+        Model.twoPlay = gamePlay.getPlayers().get(1);
+        Model.secondPlayer = Model.twoPlay.getName();
+
+        JsonNode nodeStep = objectMapper.readTree(new File(url)).get("GamePlay").get("Game").get("Step");
+        Model.stepList = Arrays.asList(objectMapper.readValue(nodeStep.toString(), Step[].class));
+
+        JsonNode nodeGameResult = objectMapper.readTree(new File(url)).get("GamePlay").get("GameResult").get("Player");
+        Model.winnerPlay = objectMapper.readValue(nodeGameResult.toString(),Player.class);
+//        System.out.println(nodeStep);
+//        System.out.println(gamePlay);
+//        System.out.println(nodeGameResult);
     }
 }
