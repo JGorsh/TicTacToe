@@ -3,14 +3,10 @@ import java.net.URL;
 
 public interface SaveParseInterface {
 
-    void saveXML();
+    void save();
 
-    void parseXML(String url);
-
-    void saveJSON();
-
-    void parseJSON(String url);
-
-    void parseHttpJSON(URL url);
+    void parse(String url);
+//
+//    void parseHttpJSON(URL url);
 
 }

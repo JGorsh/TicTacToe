@@ -1,7 +1,9 @@
 package com.alex.model;
 
 import com.alex.controller.Controller;
-import com.alex.repository.SaveParse;
+import com.alex.repository.SaveParseInterface;
+import com.alex.repository.SaveParseJSON;
+import com.alex.repository.SaveParseXML;
 import com.alex.view.GameBoard;
 import com.alex.view.View;
 import java.io.IOException;
@@ -56,19 +58,21 @@ public class Model {
 
     // метод обработки запроса на повторную игру
     public static void request() throws IOException {
-        SaveParse saveParse = new SaveParse();
+        SaveParseInterface saveParseXML = new SaveParseXML();
+        SaveParseInterface saveParseJSON = new SaveParseJSON();
         answer = Controller.reader.readLine();
         if (answer.equals("y")) {
-            saveParse.saveXML();// сохранение в XML
-            saveParse.saveJSON();
+
+            saveParseXML.save();// сохранение в XML
+            saveParseJSON.save();
             initBoard();
             Controller.writer.write("\n" + "--------------------------------" + "\n");
             Controller.startGame();
         } else {
             System.out.println("Конец игры!");
             Controller.writer.write("\n" + "Результат:" + "\n" + firstPlayer + " " + countFirst + "\n" + secondPlayer + " " + countSecond + "\n");
-            saveParse.saveXML();// сохранение в XML
-            saveParse.saveJSON();
+            saveParseXML.save();// сохранение в XML
+            saveParseJSON.save();
             isNext = false;
         }
     }
