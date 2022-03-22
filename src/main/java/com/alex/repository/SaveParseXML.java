@@ -4,7 +4,6 @@ import com.alex.model.Model;
 import com.alex.model.Player;
 import com.alex.model.Step;
 import org.w3c.dom.*;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
